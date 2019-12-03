@@ -1,0 +1,40 @@
+svg text {
+    font-family: Helvetica, Arial, Verdana, sans-serif;
+    fill: #666;
+    font-size: 12px;
+  }
+  .line {
+    fill: none;
+    stroke: #3880aa;
+    stroke-width: 3px;
+  }
+  .path-fill {
+    fill: #3880aa;
+    opacity: 0.3;
+    stroke: none;
+  }
+  .axis .domain {
+    fill: none;
+  }
+  .axis .tick line {
+    stroke: #EEE;
+    stroke-width: 1px;
+  }
+  .tooltip-line {
+    fill: none;
+    stroke: #3880aa;
+    stroke-width: 1px;
+    stroke-dasharray: 3px;
+  }
+  .tooltip-point {
+    fill: #3880aa;
+    stroke: #3880aa;
+    stroke-width: 1px;
+  }
+  .avg-line {
+    fill: none;
+    stroke: #3880aa;
+    stroke-width: 1px;
+    stroke-dasharray: 5px;
+  }
+  

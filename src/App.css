@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -15,8 +15,45 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+} */
+
+div.tooltip {   
+  position: absolute;           
+  text-align: center;           
+  width: 120px;                  
+  height: 28px;                 
+  padding: 12px;             
+  font: 12px sans-serif;        
+  background: lightsteelblue;   
+  border: 0px;      
+  border-radius: 8px;           
+  pointer-events: none;         
 }
 
 .App-link {
   color: #09d3ac;
+}
+
+.bar.bid {
+  fill:#03a7a8;
+}
+.bar.ask {
+  fill:#fc5857;
+}
+.bar:hover {
+  fill: #337ab7;
+}
+.axis--x path {
+  display: none;
+}
+.axis--y path {
+  display: none;
+}
+svg, html, body {
+  width: 100%;
+  height: 100%;
+}
+
+.data-circle {
+	fill: #3C92BA;     
 }

@@ -1,0 +1,618 @@
+{
+    "bitfinex": [
+      {
+        "type": "bid",
+        "price": 7041.00663701,
+        "total": 0.9039269,
+        "category": "bitfinex"
+      },
+      {
+        "type": "bid",
+        "price": 7039.00663604,
+        "total": 0.37898614,
+        "category": "bitfinex"
+      },
+      {
+        "type": "bid",
+        "price": 7039.00663603,
+        "total": 2.44758043,
+        "category": "bitfinex"
+      },
+      {
+        "type": "bid",
+        "price": 7039.00663601,
+        "total": 2.9,
+        "category": "bitfinex"
+      },
+      {
+        "type": "bid",
+        "price": 7038.07539604,
+        "total": 2.81896,
+        "category": "bitfinex"
+      },
+      {
+        "type": "bid",
+        "price": 7038.07539604,
+        "total": 2.71896,
+        "category": "bitfinex"
+      },
+      {
+        "type": "bid",
+        "price": 7037.20046893,
+        "total": 0.1072,
+        "category": "bitfinex"
+      },
+      {
+        "type": "bid",
+        "price": 7033.11018413,
+        "total": 0.51033125,
+        "category": "bitfinex"
+      },
+      {
+        "type": "bid",
+        "price": 7031.46654,
+        "total": 0.6004,
+        "category": "bitfinex"
+      },
+      {
+        "type": "bid",
+        "price": 7030,
+        "total": 1.12,
+        "category": "bitfinex"
+      },
+      {
+        "type": "bid",
+        "category": "bitfinex",
+        "price": 7028.89999999,
+        "total": 0.438
+      },
+      {
+        "type": "bid",
+        "category": "bitfinex",
+        "price": 7028.89999998,
+        "total": 0.51422698
+      },
+      {
+        "type": "bid",
+        "category": "bitfinex",
+        "price": 7027.32724366,
+        "total": 0.207
+      },
+      {
+        "type": "bid",
+        "category": "bitfinex",
+        "price": 7025.00000098,
+        "total": 0.1203
+      },
+      {
+        "type": "bid",
+        "category": "bitfinex",
+        "price": 7023.2,
+        "total": 3.5
+      },
+      {
+        "type": "bid",
+        "category": "bitfinex",
+        "price": 7019,
+        "total": 0.07203021
+      },
+      {
+        "type": "bid",
+        "price": 7017.51579867,
+        "category": "bitfinex",
+        "total": 0.20635788
+      },
+      {
+        "type": "bid",
+        "price": 7015.96187167,
+        "category": "bitfinex",
+        "total": 0.61525364
+      },
+      {
+        "type": "bid",
+        "price": 7015.94857165,
+        "category": "bitfinex",
+        "total": 0.90036377
+      },
+      {
+        "type": "bid",
+        "price": 7015,
+        "category": "bitfinex",
+        "total": 1.23
+      },
+      {
+        "type": "bid",
+        "price": 7012.6069775,
+        "category": "bitfinex",
+        "total": 0.19820989
+      },
+      {
+        "type": "bid",
+        "price": 7011.94724055,
+        "category": "bitfinex",
+        "total": 0.19
+      },
+      {
+        "type": "bid",
+        "price": 7010.89999999,
+        "category": "bitfinex",
+        "total": 0.39490735
+      },
+      {
+        "type": "bid",
+        "price": 7010.806315,
+        "category": "bitfinex",
+        "total": 0.12028526
+      },
+      {
+        "type": "bid",
+        "price": 7010.41684809,
+        "category": "bitfinex",
+        "total": 0.1205
+      },
+      {
+        "type": "bid",
+        "category": "bitfinex",
+        "price": 7010,
+        "total": 0.81343319
+      },
+      {
+        "type": "ask",
+        "price": 7048.1,
+        "total": 0.263,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7050.19291872,
+        "total": 0.1613394,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7053.59427,
+        "total": 0.05770808,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7058.88657126,
+        "total": 0.608,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7058.88657127,
+        "total": 0.754,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7061.91880964,
+        "total": 0.18276863,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7061.91880966,
+        "total": 0.16275104,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7061.91880968,
+        "total": 0.91,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7062.06271389,
+        "total": 0.01411721,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7063.09999998,
+        "total": 0.14963421,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7063.09999999,
+        "total": 1.9794,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7070.17325,
+        "total": 0.72159206,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7071.67999998,
+        "total": 0.651,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7074.91278363,
+        "total": 1.99733893,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7088.39671999,
+        "total": 0.12118043,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7088.39672,
+        "total": 0.0014,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7094.99999999,
+        "total": 0.56793577,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7095,
+        "total": 2,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7104.82373051,
+        "total": 0.04257924,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7104.82373054,
+        "total": 0.05617021,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7108.42,
+        "total": 0.522,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7111.3096346,
+        "total": 0.12020727,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7112.34734799,
+        "total": 16.4676,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7114.86426148,
+        "total": 0.80035871,
+        "category": "bitfinex"
+      },
+      {
+        "type": "ask",
+        "price": 7116.35346,
+        "total": 0.9004,
+        "category": "bitfinex"
+      }
+    ],
+    "binance": [
+      {
+        "type": "bid",
+        "total": 0.09039269,
+        "price": 7041.00663701,
+        "category": "binance"
+      },
+      {
+        "type": "bid",
+        "total": 0.27898614,
+        "price": 7039.00663604,
+        "category": "binance"
+      },
+      {
+        "type": "bid",
+        "total": 2.94758043,
+        "price": 7039.00663603,
+        "category": "binance"
+      },
+      {
+        "type": "bid",
+        "total": 2,
+        "price": 7039.00663601,
+        "category": "binance"
+      },
+      {
+        "type": "bid",
+        "total": 2.11896,
+        "price": 7038.07539604,
+        "category": "binance"
+      },
+      {
+        "type": "bid",
+        "total": 2.11896,
+        "price": 7038.07539604,
+        "category": "binance"
+      },
+      {
+        "type": "bid",
+        "total": 0.0072,
+        "price": 7037.20046893,
+        "category": "binance"
+      },
+      {
+        "type": "bid",
+        "total": 0.21033125,
+        "price": 7033.11018413,
+        "category": "binance"
+      },
+      {
+        "type": "bid",
+        "total": 0.0004,
+        "price": 7031.46654,
+        "category": "binance"
+      },
+      {
+        "type": "bid",
+        "total": 1,
+        "price": 7030,
+        "category": "binance"
+      },
+      {
+        "type": "bid",
+        "category": "binance",
+        "total": 0.238,
+        "price": 7028.89999999
+      },
+      {
+        "type": "bid",
+        "category": "binance",
+        "total": 0.01422698,
+        "price": 7028.89999998
+      },
+      {
+        "type": "bid",
+        "category": "binance",
+        "total": 0.007,
+        "price": 7027.32724366
+      },
+      {
+        "type": "bid",
+        "category": "binance",
+        "total": 0.003,
+        "price": 7025.00000098
+      },
+      {
+        "type": "bid",
+        "category": "binance",
+        "total": 2.5,
+        "price": 7023.2
+      },
+      {
+        "type": "bid",
+        "category": "binance",
+        "total": 0.00203021,
+        "price": 7019
+      },
+      {
+        "type": "bid",
+        "total": 0.00635788,
+        "category": "binance",
+        "price": 7017.51579867
+      },
+      {
+        "type": "bid",
+        "total": 0.01525364,
+        "category": "binance",
+        "price": 7015.96187167
+      },
+      {
+        "type": "bid",
+        "total": 0.00036377,
+        "category": "binance",
+        "price": 7015.94857165
+      },
+      {
+        "type": "bid",
+        "total": 1,
+        "category": "binance",
+        "price": 7015
+      },
+      {
+        "type": "bid",
+        "total": 0.16820989,
+        "category": "binance",
+        "price": 7012.6069775
+      },
+      {
+        "type": "bid",
+        "total": 0.11,
+        "category": "binance",
+        "price": 7011.94724055
+      },
+      {
+        "type": "bid",
+        "total": 0.30490735,
+        "category": "binance",
+        "price": 7010.89999999
+      },
+      {
+        "type": "bid",
+        "total": 0.00028526,
+        "category": "binance",
+        "price": 7010.806315
+      },
+      {
+        "type": "bid",
+        "total": 0.0005,
+        "category": "binance",
+        "price": 7010.41684809
+      },
+      {
+        "type": "bid",
+        "category": "binance",
+        "total": 0.71343319,
+        "price": 7010
+      },
+      {
+        "type": "ask",
+        "total": 0.26,
+        "price": 7048.1,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.0613394,
+        "price": 7050.19291872,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.02770808,
+        "price": 7053.59427,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.208,
+        "price": 7058.88657126,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.154,
+        "price": 7058.88657127,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.08276863,
+        "price": 7061.91880964,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.56275104,
+        "price": 7061.91880966,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.11,
+        "price": 7061.91880968,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.01411721,
+        "price": 7062.06271389,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.10963421,
+        "price": 7063.09999998,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 1.5794,
+        "price": 7063.09999999,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.42159206,
+        "price": 7070.17325,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.151,
+        "price": 7071.67999998,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 1.91733893,
+        "price": 7074.91278363,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.00118043,
+        "price": 7088.39671999,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.0014,
+        "price": 7088.39672,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.56793577,
+        "price": 7094.99999999,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 2,
+        "price": 7095,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.04257924,
+        "price": 7104.82373051,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.09617021,
+        "price": 7104.82373054,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.5,
+        "price": 7108.42,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.00020727,
+        "price": 7111.3096346,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 16.1676,
+        "price": 7112.34734799,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.00035871,
+        "price": 7114.86426148,
+        "category": "binance"
+      },
+      {
+        "type": "ask",
+        "total": 0.0004,
+        "price": 7116.35346,
+        "category": "binance"
+      }
+    ]
+  }
