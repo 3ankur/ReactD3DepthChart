@@ -7,8 +7,6 @@ import "./chart.css";
 console.log(liveData);
 const DepthChart = props => {
   const ref = useRef(null);
-
-
   const  processData = (list, type, desc) =>{
     var res = [];
     // Convert to data points
@@ -84,24 +82,24 @@ const DepthChart = props => {
   );
 
    const drawChart =() =>{
-    let width = 1000;
+    let width = 950;
     let height= 400;
 
     const colorCodeObj = {
       "binance":{
-        "bid":"#69b3a2",
-        "ask":"#fc5857"
+        "bid":"#6a00ff",
+        "ask":"#ab0000"
       },
       "bitfinex":{
-        "bid":"#00FF7F",
-        "ask":"#F4A460"
+        
+
+        "bid":"#69b3a2",
+        "ask":"#fc5857"
+
       }
     }
      
   
-
-   
-
     
    let currentBidsData =  processData(liveData.result.bids, "bids", true);
    let currentAsksData =  processData(liveData.result.asks, "asks", false);
