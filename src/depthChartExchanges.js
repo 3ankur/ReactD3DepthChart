@@ -191,12 +191,63 @@ let svg = d3.select(".depthChartExchanges")
 
      // if("binance" === excType ){
 
-//for mousemove
+
+
+
+    }//end of exchanges itration
+
+    //adding legend for exchanges
+
+    var legend = svg.append("g")
+    .attr("class", "legend")
+    .attr("id","ad")
+    .attr('transform', `translate(740,${380})`);
+    
+    var rects = legend.selectAll('#exchangeLegend')
+    .data(exchangesList)
+    .enter()
+    .append("rect")
+    .attr("x", function(d, i){ return i *  100;})
+    .attr("y", 50)
+    .attr("width", 10)
+    .attr("height", 10)
+    .style("fill",function(d,i){return legendColor[i];});
+    
+    var texts = legend.selectAll('text')
+    .data(exchangesList)
+    .enter()
+    .append("text")
+    .attr("x", function(d, i){ return i *  100 + 15;})
+    .attr("y",60)
+    .attr("class","leg_txt_font")
+    .text(function(d,i){ return exchangesList[i];})
+    
+    texts.on("click", function(elemData){
+   // console.log(elemData, console.log( d3.selectAll(".BID")));
+    d3.selectAll(".all_ask").style("opacity", 0.01)
+    d3.selectAll(".all_bid").style("opacity", 0.01)
+    d3.selectAll("."+elemData+"_ask").style("opacity", 3)
+    d3.selectAll("."+elemData+"_bid").style("opacity", 3)
+   // d3.select("#bitfinex_over").style("display", "none");
+
+
+    d3.select("#"+elemData+"_mover").remove();
+    d3.select("#"+elemData+"_mcover").remove();
+    
+   //for mousemove
 let focus = svg.append("g")
+.attr("id",elemData+"_mover")
 .attr("class", "tooltip")
 .style("display", "none");
 
 focus.append("circle")
+.attr("id","left_circle")
+.attr("class", "tooltip-point")
+.attr("r", 5);
+
+
+focus.append("circle")
+.attr("id","right_circle")
 .attr("class", "tooltip-point")
 .attr("r", 5);
 
@@ -234,7 +285,7 @@ focus.append("text")
 .attr("dy", "-.5em");
 
 svg.append("rect")
-.attr("id","bitfinex_over")
+.attr("id",elemData+"_mcover")
 .attr("width", width)
 .attr("height", height)
 .style("fill", "none")
@@ -244,7 +295,56 @@ svg.append("rect")
 .on("mousemove", mousemove);
 
 
-let tmpMergeArr = [...bids,...asks];
+let tmpMergeArr = [...mainObj[elemData]["bids"],...mainObj[elemData]["asks"]];
+//event for mousemove
+function mousemove() {
+ // console.log("Current THis",this);
+  //console.log("Inverted Value",x.invert(d3.mouse(this)[0]));
+let x0 = x.invert(d3.mouse(this)[0]),
+i = bisectDate(tmpMergeArr, x0, 1),
+d0 = tmpMergeArr[i - 1],
+d1 = tmpMergeArr[i];
+
+let d = typeof d1 !=="undefined" && x0 - d0.value > d1.value - x0 ? d1 : d0;
+
+focus.select("circle.tooltip-point")
+.attr("transform",`translate(${x(d.value)},${y(d.totalvolume)})`);
+
+
+focus.select("text.y1")
+.attr("transform", "translate("+ d3.mouse(this)[0] + "," + y(d.totalvolume) + ")");
+
+focus.select("text.x1")
+.attr("transform", "translate("+ x(d.value) + "," + ((height + y(d.totalvolume))/2) + ") rotate(-90)");
+
+focus.select("text.x2")
+.attr("transform", "translate("+ x(d.value) + "," + ((height + y(d.totalvolume))/2) + ") rotate(-90)");
+
+focus.select("line.tooltip-start-date")
+.attr("y2", y(d.totalvolume))
+.attr("x1", x(d.value))
+.attr("x2", x(d.value));
+
+focus.select("line.tooltip-end-date")
+.attr("y2", y(d.totalvolume))
+.attr("x1", x(d.value))
+.attr("x2", x(d.value));
+
+focus.select("line.tooltip-mileage")
+.attr("y1", y(d.totalvolume))
+.attr("y2", y(d.totalvolume));
+
+focus.select("text.y1").text(d.totalvolume);
+focus.select("text.x1").text(d.value);
+focus.select("text.x2").text(d.value);
+
+
+}
+
+//end mousemove
+    //  }
+
+//event for mousemove
 function mousemove() {
   console.log("Current THis",this);
   console.log("Inverted Value",x.invert(d3.mouse(this)[0]));
@@ -290,52 +390,12 @@ focus.select("text.x2").text(d.value);
 }
 
 //end mousemove
-    //  }
-
-
-
-
-    }
-
-    //adding legend for exchanges
-
-    var legend = svg.append("g")
-    .attr("class", "legend")
-    .attr("id","ad")
-    .attr('transform', `translate(740,${380})`);
-    
-    var rects = legend.selectAll('#ad')
-    .data(exchangesList)
-    .enter()
-    .append("rect")
-    .attr("x", function(d, i){ return i *  100;})
-    .attr("y", 50)
-    .attr("width", 10)
-    .attr("height", 10)
-    .style("fill",function(d,i){return legendColor[i];});
-    
-    var texts = legend.selectAll('text')
-    .data(exchangesList)
-    .enter()
-    .append("text")
-    .attr("x", function(d, i){ return i *  100 + 15;})
-    .attr("y",60)
-    .attr("class","leg_txt_font")
-    .text(function(d,i){ return exchangesList[i];})
-    
-    texts.on("click", function(elemData){
-    console.log( console.log( d3.selectAll(".BID")));
-    d3.selectAll(".all_ask").style("opacity", 0.01)
-    d3.selectAll(".all_bid").style("opacity", 0.01)
-    d3.selectAll("."+elemData+"_ask").style("opacity", 3)
-    d3.selectAll("."+elemData+"_bid").style("opacity", 3)
-    d3.select("#bitfinex_over").style("display", "none");
 
 
     })
     
     .on('mouseover', function(elemData){
-      console.log(elemData);
+    //  console.log(elemData);
     //   d3.selectAll(".all_ask").style("opacity", 0.01)
     //   d3.selectAll(".all_bid").style("opacity", 0.01)
     //   d3.selectAll("."+elemData+"_ask").style("opacity", 3)

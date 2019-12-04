@@ -17,7 +17,7 @@ svg text {
     fill: none;
   }
   .axis .tick line {
-    stroke: #EEE;
+    stroke: rgb(8, 0, 0);
     stroke-width: 1px;
   }
   .tooltip-line {
@@ -38,3 +38,10 @@ svg text {
     stroke-dasharray: 5px;
   }
   
+
+  .axis line {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .25;
+    shape-rendering: crispEdges;
+  }
