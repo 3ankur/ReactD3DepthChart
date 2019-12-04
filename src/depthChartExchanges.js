@@ -78,7 +78,6 @@ const DepthChartExchanges = props => {
    const drawChart =() =>{
 
     let legendColor = ["#6a00ff","#69b3a2"];
-
     let width = 950;
     let height= 400;
 
@@ -196,6 +195,9 @@ let svg = d3.select(".depthChartExchanges")
 
     }//end of exchanges itration
 
+
+
+
     //adding legend for exchanges
 
     var legend = svg.append("g")
@@ -219,10 +221,12 @@ let svg = d3.select(".depthChartExchanges")
     .append("text")
     .attr("x", function(d, i){ return i *  100 + 15;})
     .attr("y",60)
-    .attr("class","leg_txt_font")
+    .attr("class", function(d){return d+"_legend"})
     .text(function(d,i){ return exchangesList[i];})
     
     texts.on("click", function(elemData){
+
+      
    // console.log(elemData, console.log( d3.selectAll(".BID")));
     d3.selectAll(".all_ask").style("opacity", 0.01)
     d3.selectAll(".all_bid").style("opacity", 0.01)
@@ -230,6 +234,12 @@ let svg = d3.select(".depthChartExchanges")
     d3.selectAll("."+elemData+"_bid").style("opacity", 3)
    // d3.select("#bitfinex_over").style("display", "none");
 
+   //_legend
+
+   d3.selectAll(elemData+"_legend").attr("color","#CCC")
+
+
+   //exchangesList
 
     d3.select("#"+elemData+"_mover").remove();
     d3.select("#"+elemData+"_mcover").remove();
@@ -298,6 +308,7 @@ svg.append("rect")
 let tmpMergeArr = [...mainObj[elemData]["bids"],...mainObj[elemData]["asks"]];
 //event for mousemove
 function mousemove() {
+
  // console.log("Current THis",this);
   //console.log("Inverted Value",x.invert(d3.mouse(this)[0]));
 let x0 = x.invert(d3.mouse(this)[0]),
@@ -343,52 +354,6 @@ focus.select("text.x2").text(d.value);
 
 //end mousemove
     //  }
-
-//event for mousemove
-function mousemove() {
-  console.log("Current THis",this);
-  console.log("Inverted Value",x.invert(d3.mouse(this)[0]));
-let x0 = x.invert(d3.mouse(this)[0]),
-i = bisectDate(tmpMergeArr, x0, 1),
-d0 = tmpMergeArr[i - 1],
-d1 = tmpMergeArr[i];
-
-let d = typeof d1 !=="undefined" && x0 - d0.value > d1.value - x0 ? d1 : d0;
-
-focus.select("circle.tooltip-point")
-.attr("transform",`translate(${x(d.value)},${y(d.totalvolume)})`);
-
-
-focus.select("text.y1")
-.attr("transform", "translate("+ d3.mouse(this)[0] + "," + y(d.totalvolume) + ")");
-
-focus.select("text.x1")
-.attr("transform", "translate("+ x(d.value) + "," + ((height + y(d.totalvolume))/2) + ") rotate(-90)");
-
-focus.select("text.x2")
-.attr("transform", "translate("+ x(d.value) + "," + ((height + y(d.totalvolume))/2) + ") rotate(-90)");
-
-focus.select("line.tooltip-start-date")
-.attr("y2", y(d.totalvolume))
-.attr("x1", x(d.value))
-.attr("x2", x(d.value));
-
-focus.select("line.tooltip-end-date")
-.attr("y2", y(d.totalvolume))
-.attr("x1", x(d.value))
-.attr("x2", x(d.value));
-
-focus.select("line.tooltip-mileage")
-.attr("y1", y(d.totalvolume))
-.attr("y2", y(d.totalvolume));
-
-focus.select("text.y1").text(d.totalvolume);
-focus.select("text.x1").text(d.value);
-focus.select("text.x2").text(d.value);
-
-
-}
-
 //end mousemove
 
 
