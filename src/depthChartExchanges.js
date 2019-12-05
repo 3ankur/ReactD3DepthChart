@@ -66,6 +66,20 @@ const DepthChartExchanges = props => {
       return res;
   }
 
+
+  // const getDepthBinance = ()=>{
+  //   window.fetch("https://www.binance.com/api/v1/depth?limit=500&symbol=BTCUSDT")
+  //   .then((res)=>res.json())
+  //   .then((data)=>{
+  //     console.log("updaed data",data);
+  //   })
+  // }
+
+
+  // setInterval(() => {
+  //    getDepthBinance();
+  // }, 5000);
+
  
 
   useEffect(
@@ -77,7 +91,7 @@ const DepthChartExchanges = props => {
 
    const drawChart =() =>{
 
-    let legendColor = ["#6a00ff","#69b3a2"];
+    let legendColor = ["#6a00ff","#69b3a2","#5600HH"];
     let width = 950;
     let height= 400;
 
@@ -87,6 +101,10 @@ const DepthChartExchanges = props => {
         "ask":"#ab0000"
       },
       "bitfinix":{
+        "bid":"#69b3a2",
+        "ask":"#fc5857"
+      },
+      "okex":{
         "bid":"#69b3a2",
         "ask":"#fc5857"
       }
@@ -152,17 +170,44 @@ let svg = d3.select(".depthChartExchanges")
         .y0( height )
         .y1(function(d) { return y(d.totalvolume) })
         )
-        
+
+
+// var defs = g.append("defs");
+// var gradient = defs.append("linearGradient")
+//    .attr("id", "svgGradient")
+//    .attr("x1", "0%")
+//    .attr("x2", "100%")
+//    .attr("y1", "0%")
+//    .attr("y2", "100%");
+
+// gradient.append("stop")
+//    .attr('class', 'start')
+//    .attr("offset", "0%")
+//    .attr("stop-color", "#00b088")
+//    .attr("stop-opacity", 1);
+
+// gradient.append("stop")
+//    .attr('class', 'end')
+//    .attr("offset", "100%")
+//    .attr("stop-color", "#b5ffee")
+//    .attr("stop-opacity", 1);
+
+
       g.append("path")
       .datum(bids)
       .attr("fill", "none")
-      .attr("stroke", colorCodeObj[excType]["bid"])
+       .attr("stroke", colorCodeObj[excType]["bid"])
       .attr("class",(d)=>`${excType}_bid all_bid`)
       .attr("stroke-width", 1)
+      //.attr("stroke", "url(#svgGradient)")
       .attr("d", d3.line()
       .x(function(d) { return x(d.value) })
       .y(function(d) { return y(d.totalvolume) })
       )
+
+      //define new gradient
+      
+      //end gradient
   
       g.append("path")
         .datum(asks)
@@ -187,16 +232,8 @@ let svg = d3.select(".depthChartExchanges")
       .y(function(d) { return y(d.totalvolume) })
       )
 
-
      // if("binance" === excType ){
-
-
-
-
     }//end of exchanges itration
-
-
-
 
     //adding legend for exchanges
 
@@ -205,7 +242,7 @@ let svg = d3.select(".depthChartExchanges")
     .attr("id","ad")
     .attr('transform', `translate(740,${380})`);
     
-    var rects = legend.selectAll('#exchangeLegend')
+     legend.selectAll('#exchangeLegend')
     .data(exchangesList)
     .enter()
     .append("rect")
@@ -321,6 +358,8 @@ let d = typeof d1 !=="undefined" && x0 - d0.value > d1.value - x0 ? d1 : d0;
 focus.select("circle.tooltip-point")
 .attr("transform",`translate(${x(d.value)},${y(d.totalvolume)})`);
 
+ console.log(x0,d);
+ console.log("check it for cordinate");
 
 focus.select("text.y1")
 .attr("transform", "translate("+ d3.mouse(this)[0] + "," + y(d.totalvolume) + ")");
