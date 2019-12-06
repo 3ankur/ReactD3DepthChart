@@ -2,7 +2,9 @@ import React  from 'react';
 import D3Component from './D3Component';
 //import DepthChart from "./D3_demo";
 import jsonData from "./data.json";
-import DepthChartExchanges from './depthChartExchanges';
+//import DepthChartExchanges from './depthChartExchanges';
+
+import DepthChartExchangesNew from './depthChartExchangesNew';
 //import Test6 from "./test6";
 
 console.log(jsonData);
@@ -13,11 +15,12 @@ function App() {
     <div className="App">
 
 {/* <DepthChart/> */}
-<DepthChartExchanges />
-
+{/* <DepthChartExchanges /> */}
+    
          {/* <D3Component  id="depthChart" jsonData={jsonData} /> */}
         
          {/* <Test6 /> */}
+         <DepthChartExchangesNew />
     </div>
   );
 }
