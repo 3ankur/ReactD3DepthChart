@@ -6,11 +6,16 @@ import "./chart.css";
 import InputRange from 'react-input-range';
 import "react-input-range/lib/css/index.css";
 console.log(liveData);
+
+let gX,gY,gY1,xAxis,yAxis,x,y,y1,svg;
+let mainObj= {};
+let exchangesList= [];
+let mainMergedData = [];
+let exchangeMinMax = {};
+let width = 950;
+    let height= 400;
 const DepthChartExchanges = props => {
-  let gX,gY,gY1,xAxis,yAxis,x,y,y1;
-  let mainObj= {};
-  let exchangesList= [];
-  let mainMergedData = [];
+ 
   const depthChartRef = useRef(null);
   console.log(depthChartRef);
  // let minSliderValue = 7300;
@@ -19,10 +24,118 @@ const DepthChartExchanges = props => {
   const [minSliderValue,setMinValue] = useState(0);
   const [maxSliderValue,setMaxValue] = useState(100);
   
+const testMe = ()=>{
+  // let minValue =  d3.min([...mainObj[type]["bids"],...mainObj[type]["asks"]], d => d.value)
+  // let maxValue =  d3.max([...mainObj[type]["bids"],...mainObj[type]["asks"]], d => d.value)
+  console.log(mainObj,x);
 
+}
+
+//get the exchange nearest value
+const getNearest = (exc,v)=>{
+
+  let valuesArrMin = [];
+  let valuesArrMax = [];
+  for(let op in exc){
+    valuesArrMin.push( exc[op]["min"]);
+   valuesArrMax.push(exc[op]["max"]);
+  }
+
+
+let closestMin = valuesArrMin.reduce(function(prev, curr) {
+  return (Math.abs(curr - v.min) < Math.abs(prev - v.min) ? curr : prev);
+});
+
+let closestMax = valuesArrMax.reduce(function(prev, curr) {
+  return (Math.abs(curr - v.max) < Math.abs(prev - v.max) ? curr : prev);
+});
+
+//.log(closest);
+  let  currentActive = [];
+for(let op in exc){
+  if( (exc[op]["min"]-v["min"])>=0 && exc[op]["min"]>=closestMin && exc[op]["max"]<=closestMax){
+ //   currentActive = op;
+ currentActive.push(op);
+  }
+}
+
+
+return {
+  min:closestMin,
+  max:closestMax,
+  excList :currentActive
+}
+
+}
 
   const zoomWithSlider = (data)=>{
-    console.log(data,x);
+    console.log("current slider",data);
+    console.log("updation ",exchangeMinMax);
+   
+    
+
+
+    x.domain([data.min-1, data.max+1]);
+    svg.select(".axis--x").call(xAxis);
+   
+    let near = getNearest(exchangeMinMax,data);
+
+    d3.selectAll(".all_ask").style("opacity", 0.1)
+    d3.selectAll(".all_bid").style("opacity", 0.1)
+    console.log(near);
+
+    if(near.excList.length){
+
+      for(let info of near.excList){
+
+        d3.selectAll("."+info+"_ask").style("opacity", 3)
+        d3.selectAll("."+info+"_bid").style("opacity", 3)
+
+        svg.selectAll(`.${info}_bid`)
+        .datum(mainObj[info]["bids"])
+  
+        .attr("d", d3.line()
+        .x(function(d) { return x(d.value) })
+        .y(function(d) { return y(d.totalvolume) })
+        )
+  
+        svg.selectAll(`.${info}_bid`)
+        .datum(mainObj[info]["bids"])
+        .transition().duration(500)
+  
+        .attr("d", d3.area()
+        .x(function(d) { return x(d.value) })
+        .y0( height )
+        .y1(function(d) { return y(d.totalvolume) })
+        )
+  
+  
+        svg.selectAll(`.${info}_ask`)
+        .datum(mainObj[info]["asks"])
+        //.attr("transform", d3.event.transform)
+        .transition().duration(500)
+        .attr("d", d3.line()
+        .x(function(d) { return x(d.value) })
+        .y(function(d) { return y(d.totalvolume) })
+        )
+        svg.selectAll(`.${info}_ask`)
+        .datum(mainObj[info]["asks"])
+        .transition().duration(500)
+        .attr("d", d3.area()
+        .x(function(d) { return x(d.value) })
+        .y0( height )
+        .y1(function(d) { return y(d.totalvolume) })
+        )
+
+      }
+
+    }
+
+    
+   
+    // get the all exchange 
+   
+    // testMe();
    //  zoomed(data);
 
   // x.domain([data.min, data.max - 1]);
@@ -122,8 +235,7 @@ const DepthChartExchanges = props => {
     console.log(depthChartRef);
 
     let legendColor = ["#6a00ff","#69b3a2","#3c2f2f"];
-    let width = 950;
-    let height= 400;
+    
 
     const colorCodeObj = {
         "POLONIEX":{
@@ -155,8 +267,13 @@ const DepthChartExchanges = props => {
         mainObj[e.exchange] = {};
         mainObj[e.exchange]["bids"] =  processData(e["bids"], "bids", true);
         mainObj[e.exchange]["asks"] = processData(e["asks"], "asks", false);
-        mainMergedData = mainMergedData.concat([...mainObj[e.exchange]["bids"],...mainObj[e.exchange]["asks"]]) ;
+        let currentMergeObj = [...mainObj[e.exchange]["bids"],...mainObj[e.exchange]["asks"]];
+        mainMergedData = mainMergedData.concat(currentMergeObj) ;
         exchangesList.push(e.exchange);
+
+      exchangeMinMax[e.exchange] = {};
+      exchangeMinMax[e.exchange]["min"] = Math.round(d3.min(currentMergeObj, d => d.value));
+      exchangeMinMax[e.exchange]["max"] = Math.round(d3.max(currentMergeObj, d => d.value))
     }
 
 
@@ -168,7 +285,7 @@ let margin = {top: 100, right: 30, bottom: 40, left: 100};
  y = d3.scaleLinear().range([height, 0]);
  y1 = d3.scaleLinear().range([height, 0]);
 
-let svg = d3.select(".depthChartExchanges")
+ svg = d3.select(".depthChartExchanges")
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -184,7 +301,7 @@ let svg = d3.select(".depthChartExchanges")
     .on("zoom", zoomed);
 
   
-  svg.call(zoom)
+ // svg.call(zoom)
    //start new axis creation
     xAxis = d3.axisBottom(x)
     //(width + 20) / (height + 2) * 10
@@ -380,7 +497,13 @@ let svg = d3.select(".depthChartExchanges")
     .attr("y", 50)
     .attr("width", 10)
     .attr("height", 10)
-    .style("fill",function(d,i){ console.log("Legend d===>",d); return colorCodeObj[d]["bid"]});
+    .style("fill",function(d,i){ console.log("Legend d===>",d); return colorCodeObj[d]["bid"]})
+    .style("cursor", "pointer")
+    .on("click", function(elemData){
+      console.log(elemData);
+      updatingHoverEvent(elemData);
+      updateWithZoom(null,null,elemData)
+    });
 
     legend.selectAll('#exchangeLegend')
     .data(exchangesList)
@@ -390,7 +513,14 @@ let svg = d3.select(".depthChartExchanges")
     .attr("y", 50)
     .attr("width", 10)
     .attr("height", 10)
-    .style("fill",function(d,i){ console.log("Legend d===>",d); return colorCodeObj[d]["ask"]});
+    .style("fill",function(d,i){ console.log("Legend d===>",d); return colorCodeObj[d]["ask"]})
+    .style("cursor", "pointer")
+    .on("click", function(elemData){
+      console.log(elemData);
+      updatingHoverEvent(elemData);
+      updateWithZoom(null,null,elemData)
+    });; 
+  
     
     var texts = legend.selectAll('text')
     .data(exchangesList)
@@ -404,7 +534,21 @@ let svg = d3.select(".depthChartExchanges")
     
     texts.on("click", function(elemData){
 
-      
+        // updataChartWithData(elemData);
+        updatingHoverEvent(elemData);
+        updateWithZoom(null,null,elemData)
+   //_legend
+
+  
+
+    })
+    .on('mouseover', function(elemData){
+    
+    }).on('mouseout', function(d){
+    });
+
+    function updatingHoverEvent(elemData){
+            
    // console.log(elemData, console.log( d3.selectAll(".BID")));
     d3.selectAll(".all_ask").style("opacity", 0.1)
     d3.selectAll(".all_bid").style("opacity", 0.1)
@@ -412,10 +556,7 @@ let svg = d3.select(".depthChartExchanges")
     d3.selectAll("."+elemData+"_bid").style("opacity", 3)
    // d3.select("#bitfinex_over").style("display", "none");
 
-  // updataChartWithData(elemData);
-  
-   updateWithZoom(7330,7348,elemData)
-   //_legend
+
 
    d3.selectAll(elemData+"_legend").attr("color","#CCC")
    //exchangesList
@@ -533,12 +674,7 @@ focus.select("text.x2").text(d.value);
 //end mousemove
     //  }
 //end mousemove
-
-    })
-    .on('mouseover', function(elemData){
-    
-    }).on('mouseout', function(d){
-    });
+    }
 
    function updateWithZoom(begin,end,type){
      console.log(type,mainObj);
