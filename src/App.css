@@ -57,3 +57,7 @@ svg, html, body {
 .data-circle {
 	fill: #3C92BA;     
 }
+
+#slider-range{
+  width: 80%px; margin-left:10%; margin-right:10%
+}

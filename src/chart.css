@@ -45,3 +45,8 @@ svg text {
     stroke-opacity: .25;
     shape-rendering: crispEdges;
   }
+
+  .input-range{
+    width: 600px !important;
+    margin: 50px;
+  }
