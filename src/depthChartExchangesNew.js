@@ -7,14 +7,142 @@ import InputRange from 'react-input-range';
 import "react-input-range/lib/css/index.css";
 console.log(liveData);
 
-let gX,gY,gY1,xAxis,yAxis,x,y,y1,svg;
+let gX,gY,gY1,xAxis,yAxis,x,y,y1,svg,yAxis1;
 let mainObj= {};
 let exchangesList= [];
 let mainMergedData = [];
 let exchangeMinMax = {};
 let width = 950;
-    let height= 400;
+let height= 400;
+let  bisectDate ;
+let colorCodeObj;
+
 const DepthChartExchanges = props => {
+console.log("Calling again ");
+ 
+
+
+  const updateChart = ()=>{
+
+
+          const refDataSet = [...liveData];
+          mainMergedData = [];
+          exchangesList=[];
+          for(let e of refDataSet){
+
+          mainObj[e.exchange] = {};
+          mainObj[e.exchange]["bids"] =  processData(e["bids"], "bids", true);
+          mainObj[e.exchange]["asks"] = processData(e["asks"], "asks", false);
+          let currentMergeObj = [...mainObj[e.exchange]["bids"],...mainObj[e.exchange]["asks"]];
+          mainMergedData = mainMergedData.concat(currentMergeObj) ;
+          exchangesList.push(e.exchange);
+
+          exchangeMinMax[e.exchange] = {};
+          exchangeMinMax[e.exchange]["min"] = Math.round(d3.min(currentMergeObj, d => d.value));
+          exchangeMinMax[e.exchange]["max"] = Math.round(d3.max(currentMergeObj, d => d.value))
+          }
+
+          let minV = Math.round(d3.min(mainMergedData, d => d.value));
+          let maxV = Math.round(d3.max(mainMergedData, d => d.value));
+
+
+          y.domain([0, d3.max(mainMergedData, d => d.totalvolume)]);
+          y1.domain([0, d3.max(mainMergedData, d => d.totalvolume)]);
+
+          //gY.call(yAxis.scale(d3.event.transform.rescaleY(y)));
+          // gY1.call(yAxis.scale(d3.event.transform.rescaleY(y)));
+
+          setMinValue(minV);
+          setMaxValue(maxV);
+
+         // setSilderValue({min:minV,max:maxV});
+          
+          svg.selectAll(".tooltip-spc").remove();
+          svg.selectAll(".tooltip-point").remove();
+
+          x.domain([minV-1, maxV+1]);
+          svg.select(".axis--x").call(xAxis);
+          svg.select(".axis-right-y").call(yAxis);//yAxis1
+          svg.select(".axis--y").call(yAxis1);
+    
+          for(let info of refDataSet){
+          console.log("its the infi",info);
+       //   d3.selectAll("."+info.exchange+"_ask").style("opacity", 3)
+        //  d3.selectAll("."+info.exchange+"_bid").style("opacity", 3)
+
+          svg.selectAll(`.${info.exchange}_bid`)
+          .datum(mainObj[info.exchange]["bids"])
+
+          .attr("d", d3.line()
+          .x(function(d) { return x(d.value) })
+          .y(function(d) { return y(d.totalvolume) })
+          )
+
+          svg.selectAll(`.${info.exchange}_bid`)
+          .datum(mainObj[info.exchange]["bids"])
+          .transition().duration(500)
+
+          .attr("d", d3.area()
+          .x(function(d) { return x(d.value) })
+          .y0( height )
+          .y1(function(d) { return y(d.totalvolume) })
+          )
+          // .curve(d3.curveCardinal);
+
+          svg.selectAll(`.${info.exchange}_ask`)
+          .datum(mainObj[info.exchange]["asks"])
+          //.attr("transform", d3.event.transform)
+          .transition().duration(500)
+          .attr("d", d3.line()
+          .x(function(d) { return x(d.value) })
+          .y(function(d) { return y(d.totalvolume) })
+          )
+          svg.selectAll(`.${info.exchange}_ask`)
+          .datum(mainObj[info.exchange]["asks"])
+          .transition().duration(500)
+          .attr("d", d3.area()
+          .x(function(d) { return x(d.value) })
+          .y0( height )
+          .y1(function(d) { return y(d.totalvolume) })
+          )
+          }
+        // updateAllTooltip();
+  }
+
+
+const genrateRandomData = ()=>{
+
+  //Math.floor(Math.random() * (max - min + 1)) + min;
+
+        for(let exc of liveData){
+
+        let askArr = [];
+        //asks
+        for(let i=0;i<=25;i++){
+            // Math.floor(Math.random() * (max - min + 1)) + min;
+            // 7500 8000
+            // 1 20
+            let tmp1 = [
+            Math.random() * (7600 - 7500 + 1) + 7500,
+            Math.random() * (10 - 1 + 1) + 1
+            ];
+            askArr.push(tmp1);
+        }
+
+        exc.asks = askArr
+        let bidArr = [];
+        //bid
+        //ma 7440  mi 7100
+        for(let i=0;i<=25;i++){
+          let tmp2 = [
+          Math.random() * (7499 - 7400 + 1) + 7400,
+          Math.random() * (10 - 1 + 1) + 1
+          ];
+          bidArr.push(tmp2);
+        }
+          exc.bids = bidArr;
+        }
+}
  
   const depthChartRef = useRef(null);
   console.log(depthChartRef);
@@ -23,14 +151,7 @@ const DepthChartExchanges = props => {
   const [sliderValue, setSilderValue] = useState({min:6000,max:7350});
   const [minSliderValue,setMinValue] = useState(0);
   const [maxSliderValue,setMaxValue] = useState(100);
-  
-const testMe = ()=>{
-  // let minValue =  d3.min([...mainObj[type]["bids"],...mainObj[type]["asks"]], d => d.value)
-  // let maxValue =  d3.max([...mainObj[type]["bids"],...mainObj[type]["asks"]], d => d.value)
-  console.log(mainObj,x);
-
-}
-
+  //const [chartData,setChartData] = useState([]);
 //get the exchange nearest value
 const getNearest = (exc,v)=>{
 
@@ -58,8 +179,6 @@ for(let op in exc){
  currentActive.push(op);
   }
 }
-
-
 return {
   min:closestMin,
   max:closestMax,
@@ -69,12 +188,9 @@ return {
 }
 
   const zoomWithSlider = (data)=>{
-    console.log("current slider",data);
-    console.log("updation ",exchangeMinMax);
+   // console.log("current slider",data);
+   // console.log("updation ",exchangeMinMax);
    
-    
-
-
     x.domain([data.min-1, data.max+1]);
     svg.select(".axis--x").call(xAxis);
    
@@ -82,18 +198,17 @@ return {
 
     d3.selectAll(".all_ask").style("opacity", 0.1)
     d3.selectAll(".all_bid").style("opacity", 0.1)
+    d3.selectAll(".exc_info").style("opacity", 0.1)
+    
     console.log(near);
 
     if(near.excList.length){
-
       for(let info of near.excList){
-
         d3.selectAll("."+info+"_ask").style("opacity", 3)
         d3.selectAll("."+info+"_bid").style("opacity", 3)
 
         svg.selectAll(`.${info}_bid`)
         .datum(mainObj[info]["bids"])
-  
         .attr("d", d3.line()
         .x(function(d) { return x(d.value) })
         .y(function(d) { return y(d.totalvolume) })
@@ -108,7 +223,6 @@ return {
         .y0( height )
         .y1(function(d) { return y(d.totalvolume) })
         )
-  
   
         svg.selectAll(`.${info}_ask`)
         .datum(mainObj[info]["asks"])
@@ -126,37 +240,8 @@ return {
         .y0( height )
         .y1(function(d) { return y(d.totalvolume) })
         )
-
       }
-
     }
-
-    
-   
-    // get the all exchange 
-   
-    // testMe();
-   //  zoomed(data);
-
-  // x.domain([data.min, data.max - 1]);
-  //   var t = svg.transition().duration(0);
-  //   var size = data.min - data.max;
-  //   var step = size / 10;
-  //   var ticks = [];
-  //   for (var i = 0; i <= 10; i++) {
-  //     ticks.push(Math.floor(data.min + data.max * i));
-  //   }
-
-  //   xAxis.tickValues(ticks);
-  //   t.select(".axis--x").call(xAxis);
-  //  for(let p in mainObj){
-  //   t.selectAll(`.${p}_bid`)
-  //  .datum(mainObj[p]["bids"])
-   
-  //  t.selectAll(`.${p}_ask`)
-  //  .datum(mainObj[p]["asks"])
-  // }
-    
   }
 
 
@@ -221,23 +306,36 @@ return {
   }
 
  
+  let exCounter = 1;
   useEffect(
     () => {
-
+    console.log("its efect calling");
+    if(exCounter==1){
+ 
+    }
+    exCounter++;
     drawChart();
+   
     },
     []
   );
 
-   const drawChart =() =>{
+
 
   
+
+   const drawChart =() =>{
+
+    setInterval(()=>{
+      genrateRandomData();
+     updateChart();
+    },3000);
+
     console.log(depthChartRef);
 
-    let legendColor = ["#6a00ff","#69b3a2","#3c2f2f"];
-    
 
-    const colorCodeObj = {
+    // p #F2E5FF #6a00ff
+     colorCodeObj = {
         "POLONIEX":{
         "bid":"#6a00ff",
         "ask":"#aaaaaa"
@@ -251,12 +349,6 @@ return {
         "ask":"#ffc425"
       }
     }
-
-   const testMe = ()=>{
-     console.log("holaaa");
-   }
-     
-
 
   //  let mainObj= {};
    // let mainMergedData = [];
@@ -276,14 +368,11 @@ return {
       exchangeMinMax[e.exchange]["max"] = Math.round(d3.max(currentMergeObj, d => d.value))
     }
 
-
-   
-    
-let  bisectDate = d3.bisector(d => d.value).left;
-let margin = {top: 100, right: 30, bottom: 40, left: 100};
- x = d3.scaleLinear().range([0, width]);
- y = d3.scaleLinear().range([height, 0]);
- y1 = d3.scaleLinear().range([height, 0]);
+        bisectDate = d3.bisector(d => d.value).left;
+      let margin = {top: 100, right: 30, bottom: 40, left: 100};
+      x = d3.scaleLinear().range([0, width]);
+      y = d3.scaleLinear().range([height, 0]);
+      y1 = d3.scaleLinear().range([height, 0]);
 
  svg = d3.select(".depthChartExchanges")
       .append("svg")
@@ -293,15 +382,14 @@ let margin = {top: 100, right: 30, bottom: 40, left: 100};
       .attr("transform",
       "translate(" + margin.left + "," + margin.top + ")");
 
-
    var zoom = d3.zoom()
     .scaleExtent([1, 10])
    .translateExtent([[0, 0], [width, height]])
     .extent([[0, 0], [width, height]])
-    .on("zoom", zoomed);
+    .on("zoom", zoomed);//zoomWithSlider  zoomed
 
   
- // svg.call(zoom)
+  svg.call(zoom)
    //start new axis creation
     xAxis = d3.axisBottom(x)
     //(width + 20) / (height + 2) * 10
@@ -309,6 +397,8 @@ let margin = {top: 100, right: 30, bottom: 40, left: 100};
    .tickSize(5)
    .tickPadding(1);
 
+
+    yAxis1 = d3.axisLeft(y1)
     yAxis = d3.axisRight(y)
   //  .ticks(5)
   //  .tickSize(5)
@@ -329,21 +419,21 @@ let margin = {top: 100, right: 30, bottom: 40, left: 100};
         d3.max(mainMergedData, d => d.value) + 1,
         ]);
     y.domain([0, d3.max(mainMergedData, d => d.totalvolume)]);
-     y1.domain([0, d3.max(mainMergedData, d => d.totalvolume)]);
+    y1.domain([0, d3.max(mainMergedData, d => d.totalvolume)]);
 
       gY1 =    g.append('g')
-        .attr('class', 'axis axis--y')
-        .call(yAxis);
+              .attr('class', 'axis axis--y')
+              .call(yAxis1);
 
-        gY = g.append('g')
-        .attr('class', 'axis axis--y')
-        .attr('transform', `translate(${width},0)`)
-        .call(yAxis);
+      gY = g.append('g')
+          .attr('class', 'axis axis--y axis-right-y')
+          .attr('transform', `translate(${width+1},0)`)
+          .call(yAxis);
 
-         gX =   g.append('g')
-        .attr('class', 'axis axis--x')
-        .attr('transform', `translate(0,${height})`)
-        .call(xAxis);    
+      gX =   g.append('g')
+            .attr('class', 'axis axis--x')
+            .attr('transform', `translate(0,${height})`)
+            .call(xAxis);    
 
          let infoType = g.append("g")
          .attr("transform",`translate(700,${12})`)
@@ -441,39 +531,35 @@ let margin = {top: 100, right: 30, bottom: 40, left: 100};
      
      // if("binance" === excType ){
     }
-    
-    
+
+
+    //regarding tooltip
+    updateAllTooltip();
+    //end toltip
+
+
     //end of exchanges itration
-
     //updating tooltip content 
-
     //end of tooltip
 
-    function zoomed() {
+    function zoomed() {      
+        gX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
+        gY.call(yAxis.scale(d3.event.transform.rescaleY(y)));
+        gY1.call(yAxis.scale(d3.event.transform.rescaleY(y)));
+        // x.domain(d3.event.transform.rescaleX(x).domain());
+        //focus.select(".axis--x").call(xAxis);
 
-       console.log(mainObj);
-      console.log(d3.event.transform);
-      
-     gX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
-     gY.call(yAxis.scale(d3.event.transform.rescaleY(y)));
-     gY1.call(yAxis.scale(d3.event.transform.rescaleY(y)));
+        for(let p in mainObj){
+          svg.selectAll(`.${p}_bid`)
+          .datum(mainObj[p]["bids"])
+          .attr("transform", d3.event.transform)
+          //.transition().duration(500)
 
-
-
-    // x.domain(d3.event.transform.rescaleX(x).domain());
-     //focus.select(".axis--x").call(xAxis);
-
-     for(let p in mainObj){
-       svg.selectAll(`.${p}_bid`)
-      .datum(mainObj[p]["bids"])
-      .attr("transform", d3.event.transform)
-      //.transition().duration(500)
-
-      svg.selectAll(`.${p}_ask`)
-      .datum(mainObj[p]["asks"])
-      .attr("transform", d3.event.transform)
-      //.transition().duration(500)
-     } 
+          svg.selectAll(`.${p}_ask`)
+          .datum(mainObj[p]["asks"])
+          .attr("transform", d3.event.transform)
+          //.transition().duration(500)
+        } 
     }
     
     //adding legend for exchanges
@@ -497,10 +583,10 @@ let margin = {top: 100, right: 30, bottom: 40, left: 100};
     .attr("y", 50)
     .attr("width", 10)
     .attr("height", 10)
-    .style("fill",function(d,i){ console.log("Legend d===>",d); return colorCodeObj[d]["bid"]})
+    .style("fill",function(d,i){return colorCodeObj[d]["bid"]})
     .style("cursor", "pointer")
     .on("click", function(elemData){
-      console.log(elemData);
+     // console.log(elemData);
       updatingHoverEvent(elemData);
       updateWithZoom(null,null,elemData)
     });
@@ -516,8 +602,8 @@ let margin = {top: 100, right: 30, bottom: 40, left: 100};
     .style("fill",function(d,i){ console.log("Legend d===>",d); return colorCodeObj[d]["ask"]})
     .style("cursor", "pointer")
     .on("click", function(elemData){
-      console.log(elemData);
-      updatingHoverEvent(elemData);
+     // console.log(elemData);
+      updatingHoverEvent(elemData,this);
       updateWithZoom(null,null,elemData)
     });; 
   
@@ -535,11 +621,9 @@ let margin = {top: 100, right: 30, bottom: 40, left: 100};
     texts.on("click", function(elemData){
 
         // updataChartWithData(elemData);
-        updatingHoverEvent(elemData);
+        updatingHoverEvent(elemData,this);
         updateWithZoom(null,null,elemData)
    //_legend
-
-  
 
     })
     .on('mouseover', function(elemData){
@@ -547,26 +631,39 @@ let margin = {top: 100, right: 30, bottom: 40, left: 100};
     }).on('mouseout', function(d){
     });
 
-    function updatingHoverEvent(elemData){
+    function updatingHoverEvent(elemData,refThis){
             
-   // console.log(elemData, console.log( d3.selectAll(".BID")));
+   if(d3.select(refThis).classed("active_exchange")){
+    let checkList = d3.selectAll(".active_exchange");     //_groups
+    if(checkList && checkList.hasOwnProperty("_groups") && checkList["_groups"].length){
+      for(let el of checkList["_groups"][0]){
+        if(el && el.classList){
+          el.classList.remove("active_exchange")
+        }
+      }
+    }
+    d3.selectAll(".all_ask").style("opacity", 3)
+    d3.selectAll(".all_bid").style("opacity", 3)
+    updateAllTooltip();
+   }else{
+    d3.select(refThis).classed("active_exchange", d3.select(refThis).classed("active_exchange") ? false : true);
     d3.selectAll(".all_ask").style("opacity", 0.1)
     d3.selectAll(".all_bid").style("opacity", 0.1)
     d3.selectAll("."+elemData+"_ask").style("opacity", 3)
     d3.selectAll("."+elemData+"_bid").style("opacity", 3)
-   // d3.select("#bitfinex_over").style("display", "none");
+   }
 
-
+  
 
    d3.selectAll(elemData+"_legend").attr("color","#CCC")
    //exchangesList
-    d3.select("#"+elemData+"_mover").remove();
-    d3.select("#"+elemData+"_mcover").remove();
+  d3.select("#"+elemData+"_mover").remove();
+  d3.select("#"+elemData+"_mcover").remove();
     
-   //for mousemove
+   //for mousemove   
 let focus = svg.append("g")
 .attr("id",elemData+"_mover")
-.attr("class", "tooltip")
+.attr("class", "tooltip-spc")
 .style("display", "none");
 
 focus.append("circle")
@@ -691,20 +788,6 @@ focus.select("text.x2").text(d.value);
     setSilderValue({min: Math.round(minValue),max: Math.round(maxValue)});
     x.domain([minValue-1, maxValue+1]);
 
-    //var t = svg.transition().duration(0);
-  // let svg =  d3.select(".depthChartExchanges").transition();
-   
-   console.log( svg);
-   var size = end - begin;
-   var step = size / 8;
-   var ticks = [];
-   for (var i = 0; i <= 8; i++) {
-     ticks.push(Math.floor(begin + step * i));
-   }
-
-  // console.log(ticks);
-//   xAxis.tickValues(ticks);
-
     svg.select(".axis--x").call(xAxis);
 
     for(let p in mainObj){
@@ -745,116 +828,100 @@ focus.select("text.x2").text(d.value);
       .y1(function(d) { return y(d.totalvolume) })
       )
       } 
+   }
+   }
 
+
+  const updateTipWithLatestData = () =>{
+
+    d3.select('#tooltip')
    }
 
 
 
-    //updating the axis with  the data
-    function updataChartWithData(chartExchangeType){
-
-      console.log(chartExchangeType);
-      console.log(mainObj);
-      console.log("its the testing data");
-
-    //  var svg = d3.select(".depthChartExchanges").transition();
-
-      //   mainObj[chartExchangeType]
-      let currentBids = mainObj[chartExchangeType]["bids"];
-      let currentAsks = mainObj[chartExchangeType]["asks"]
-      let updatedMergeData = [...currentBids,...currentAsks]
-
-      x.domain([
-        d3.min(updatedMergeData, d => d.value),
-        d3.max(updatedMergeData, d => d.value) + 1,
-        ]);
-
-        console.log("Minimum data",d3.min(updatedMergeData, d => d.value));
-
-    y.domain([0, d3.max(updatedMergeData, d => d.totalvolume)]);
-    y1.domain([0, d3.max(updatedMergeData, d => d.totalvolume)]);
-
-    console.log("updared bids",currentBids);
+   // regarding tooltip
+const updateAllTooltip = ()=>{
 
 
-      svg.selectAll(".axis--x").transition()
-      .duration(1000)
-      .call(d3.axisBottom(x));   
-
-      svg.selectAll(".axis--y")
-      .transition()
-      .duration(1000)
-      .call(d3.axisLeft(y));
-
-      svg.selectAll(".axis--y")
-      .transition()
-      .duration(1000)
-      .call(d3.axisRight(y1));
+//d3.selectAll(".react_tooltip").remove();
+//d3.selectAll(".line_tooltip").remove();
 
 
-      svg.selectAll(`.${chartExchangeType}_bid`).remove()
-      svg.append("path")
-     // svg.selectAll(`.${chartExchangeType}_bid`)
-      .datum(currentBids)
-      .transition().duration(1000)
-      .attr("fill", colorCodeObj[chartExchangeType]["bid"])
-      .attr("class",(d)=>`${chartExchangeType}_bid all_bid no23`)
-      .attr("fill-opacity", .3)
-      .attr("stroke", "none")
-      .attr("d", d3.area()
-      .x(function(d) { return x(d.value) })
-      .y0( height )
-      .y1(function(d) { return y(d.totalvolume) })
-      )
-   
 
-      svg.selectAll(`.${chartExchangeType}_bid`).remove()
-      svg.append("path")
-     // svg.selectAll(`.${chartExchangeType}_bid`)
-      .datum(currentBids)
-      .transition().duration(1000)
-      .attr("fill", "none")
-      .attr("stroke", colorCodeObj[chartExchangeType]["bid"])
-      .attr("class",(d)=>`${chartExchangeType}_bid all_bid`)
-      .attr("stroke-width", 1)
-      //.attr("stroke", "url(#svgGradient)")how to set the opposite side axis in d3 chart
-      .attr("d", d3.line()
-      .x(function(d) { return x(d.value) })
-      .y(function(d) { return y(d.totalvolume) })
-      )
-       
+const tooltip = d3.select('#tooltip');
+const tooltipLine = svg.append('line');
 
-       svg.selectAll(`.${chartExchangeType}_ask`).remove()
-       svg.append("path")
-     //svg.selectAll(`.${chartExchangeType}_ask`)
-    .datum(currentAsks)
-        .transition().duration(1000)
-        .attr("fill", colorCodeObj[chartExchangeType]["ask"])
-        .attr("class",(d)=>`${chartExchangeType}_ask all_bid`)
-        .attr("fill-opacity", .3)
-        .attr("stroke", "none")
-        .attr("d", d3.area()
-        .x(function(d) { return x(d.value) })
-        .y0( height )
-        .y1(function(d) { return y(d.totalvolume) })
-        )
-        
+var tipBox = svg.append('rect')
+.attr("class","react_tooltip")
+.attr('width', width)
+.attr('height', height)
+.attr('opacity', 0)
+.on('mousemove', drawTooltip)
+.on('mouseout', removeTooltip)
 
-      svg.selectAll(`.${chartExchangeType}_ask`).remove()
-      svg.append("path")
-      //svg.selectAll(`.${chartExchangeType}_ask`)
-      .datum(currentAsks)
-      .transition().duration(1000)
-      .attr("fill", "none")
-      .attr("stroke", colorCodeObj[chartExchangeType]["ask"])
-      .attr("class",(d)=>`${chartExchangeType}_ask all_bid`)
-      .attr("stroke-width", 1)
-      .attr("d", d3.line()
-      .x(function(d) { return x(d.value) })
-      .y(function(d) { return y(d.totalvolume) })
-      )
+
+function removeTooltip() {
+if (tooltip) tooltip.style('display', 'none');
+if (tooltipLine) tooltipLine.attr('stroke', 'none');
+}
+
+function drawTooltip() {
+
+const xPrice = x.invert(d3.mouse(tipBox.node())[0]);//Math.floor()
+
+//new value changing
+let x0 = x.invert(d3.mouse(this)[0]);
+//end of that
+
+// mainMergedData.sort((a, b) => {
+// return b.history.find(h => h.year == year).population - a.history.find(h => h.year == year).population;
+// })  
+
+tooltipLine.attr('stroke', 'black')
+.attr("class","line_tooltip")
+.attr('x1', x(xPrice))
+.attr('x2', x(xPrice))
+.attr('y1', 0)
+.attr('y2', height);
+//console.log(d3.event.pageX );
+
+// tooltipLine.append("circle")
+//       .attr("r", 7)
+//       .style("stroke", function(d) {
+//         return "green";
+//       })
+
+tooltip.html(xPrice)
+
+.style('left', d3.event.pageX + 20+"px")
+.style('top', d3.event.pageY - 20+"px")
+.style('display', 'block')
+.selectAll()
+.data(liveData).enter()
+.append('div')
+.style('color', d => getExcColor(x0,d)   )
+.html( d => { return  d.exchange + ': ' + getExcInfo(x0,d,xPrice)}  );
+}
+    
+    
+   function getExcColor(cX0,d){
+      let  tmpMergeArr = [...d.bids,...d.asks];
+      let i = bisectDate(tmpMergeArr, cX0, 1);
+      return i >(tmpMergeArr.length/2)+1 ? colorCodeObj[d.exchange]["ask"] : colorCodeObj[d.exchange]["bid"]
     }
+
+
+   function getExcInfo(cX0,d,pricePoint){
+        let  tmpMergeArr = [...d.bids,...d.asks];
+        let i = bisectDate(tmpMergeArr, cX0, 1),
+        d0 = tmpMergeArr[i - 1],
+        d1 = tmpMergeArr[i];
+        let dUpdate = typeof d1 !=="undefined" && cX0 - d0.value > d1.value - cX0 ? d1 : d0;
+        return `Volume: ${dUpdate.volume.toFixed(2)}  Qu: ${dUpdate.totalvolume.toFixed(2)}`;
    }
+
+   }
+
 
   return (
 
@@ -878,7 +945,10 @@ focus.select("text.x2").text(d.value);
   <div ref={depthChartRef} className="depthChartExchanges"></div>
     <div id='tooltip' style={{"position":"absolute",
                             "backgroundColor":"lightgray",
-                            "padding":"5px"
+                            "padding":"10px",
+                            fontSize: "12px",
+                            background:"#fcfcfc",
+                            border:"1px solid #ccc"
                         }}></div>
         </div>
     

@@ -5,6 +5,7 @@ import jsonData from "./data.json";
 //import DepthChartExchanges from './depthChartExchanges';
 
 import DepthChartExchangesNew from './depthChartExchangesNew';
+//import MultiStackDepthChart from './multipalStack/multiStack';
 //import Test6 from "./test6";
 
 console.log(jsonData);
@@ -20,6 +21,8 @@ function App() {
          {/* <D3Component  id="depthChart" jsonData={jsonData} /> */}
         
          {/* <Test6 /> */}
+
+        {/* <MultiStackDepthChart/> */}
          <DepthChartExchangesNew />
     </div>
   );
