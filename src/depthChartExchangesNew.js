@@ -5,7 +5,7 @@ import liveData from "./newDataSet.json";
 import "./chart.css";
 import InputRange from 'react-input-range';
 import "react-input-range/lib/css/index.css";
-console.log(liveData);
+//console.log(liveData);
 
 let gX,gY,gY1,xAxis,yAxis,x,y,y1,svg,yAxis1;
 let mainObj= {};
@@ -16,9 +16,10 @@ let width = 950;
 let height= 400;
 let  bisectDate ;
 let colorCodeObj;
+let tooltip,tooltipLine,singleToolTipMergeArr ; 
 
 const DepthChartExchanges = props => {
-console.log("Calling again ");
+//console.log("Calling again ");
  
 
 
@@ -57,8 +58,8 @@ console.log("Calling again ");
 
          // setSilderValue({min:minV,max:maxV});
           
-          svg.selectAll(".tooltip-spc").remove();
-          svg.selectAll(".tooltip-point").remove();
+      //    svg.selectAll(".tooltip-spc").remove();
+      //    svg.selectAll(".tooltip-point").remove();
 
           x.domain([minV-1, maxV+1]);
           svg.select(".axis--x").call(xAxis);
@@ -66,9 +67,13 @@ console.log("Calling again ");
           svg.select(".axis--y").call(yAxis1);
     
           for(let info of refDataSet){
-          console.log("its the infi",info);
+        //  console.log("its the infi",info);
        //   d3.selectAll("."+info.exchange+"_ask").style("opacity", 3)
         //  d3.selectAll("."+info.exchange+"_bid").style("opacity", 3)
+
+        if(document.getElementById(`${info.exchange}_mcover`)){
+          singleToolTipMergeArr = [...mainObj[info.exchange]["bids"],...mainObj[info.exchange]["asks"]];
+        }
 
           svg.selectAll(`.${info.exchange}_bid`)
           .datum(mainObj[info.exchange]["bids"])
@@ -145,7 +150,7 @@ const genrateRandomData = ()=>{
 }
  
   const depthChartRef = useRef(null);
-  console.log(depthChartRef);
+  //console.log(depthChartRef);
  // let minSliderValue = 7300;
   //let maxSliderValue  = 7400;
   const [sliderValue, setSilderValue] = useState({min:6000,max:7350});
@@ -200,10 +205,11 @@ return {
     d3.selectAll(".all_bid").style("opacity", 0.1)
     d3.selectAll(".exc_info").style("opacity", 0.1)
     
-    console.log(near);
+    //console.log(near);
 
-    if(near.excList.length){
-      for(let info of near.excList){
+    //near.excList
+   // if(near.excList.length){
+      for(let info of exchangesList){
         d3.selectAll("."+info+"_ask").style("opacity", 3)
         d3.selectAll("."+info+"_bid").style("opacity", 3)
 
@@ -241,7 +247,7 @@ return {
         .y1(function(d) { return y(d.totalvolume) })
         )
       }
-    }
+   // }
   }
 
 
@@ -310,26 +316,17 @@ return {
   useEffect(
     () => {
     console.log("its efect calling");
-    if(exCounter==1){
- 
-    }
-    exCounter++;
     drawChart();
-   
-    },
+   },
     []
   );
-
-
-
-  
 
    const drawChart =() =>{
 
     setInterval(()=>{
       genrateRandomData();
      updateChart();
-    },3000);
+    },10000);
 
     console.log(depthChartRef);
 
@@ -389,7 +386,7 @@ return {
     .on("zoom", zoomed);//zoomWithSlider  zoomed
 
   
-  svg.call(zoom)
+  //svg.call(zoom)
    //start new axis creation
     xAxis = d3.axisBottom(x)
     //(width + 20) / (height + 2) * 10
@@ -435,8 +432,8 @@ return {
             .attr('transform', `translate(0,${height})`)
             .call(xAxis);    
 
-         let infoType = g.append("g")
-         .attr("transform",`translate(700,${12})`)
+        //  let infoType = g.append("g")
+        //  .attr("transform",`translate(700,${12})`)
           
 
     //appening by category
@@ -496,38 +493,38 @@ return {
       .y(function(d) { return y(d.totalvolume) })
       )
 
-    infoType.append("text")
-    .attr("class",`${excType}_bid exc_info`)
-    .attr("opacity",0)
-    .attr("x", 119)
-    .attr("y",60)
-    .text("BID")
+    // infoType.append("text")
+    // .attr("class",`${excType}_bid exc_info`)
+    // .attr("opacity",0)
+    // .attr("x", 119)
+    // .attr("y",60)
+    // .text("BID")
 
-      infoType.append("rect")
-      .attr("class",`${excType}_bid exc_info`)
-      .attr("x", 100)
-      .attr("y", 75)
-      .attr("width", 10)
-      .attr("height", 10)
-      .style("fill",colorCodeObj[excType]["bid"])
-      .attr("opacity",0)
+    //   infoType.append("rect")
+    //   .attr("class",`${excType}_bid exc_info`)
+    //   .attr("x", 100)
+    //   .attr("y", 75)
+    //   .attr("width", 10)
+    //   .attr("height", 10)
+    //   .style("fill",colorCodeObj[excType]["bid"])
+    //   .attr("opacity",0)
       
 
-      infoType.append("text")
-      .attr("class",`${excType}_ask exc_info`)
-      .attr("opacity",0)
-      .attr("x", 115)
-      .attr("y",85)
-      .text("ASK")
+    //   infoType.append("text")
+    //   .attr("class",`${excType}_ask exc_info`)
+    //   .attr("opacity",0)
+    //   .attr("x", 115)
+    //   .attr("y",85)
+    //   .text("ASK")
 
-      infoType.append("rect")
-      .attr("class",`${excType}_ask exc_info`)
-      .attr("x", 100)
-      .attr("y", 50)
-      .attr("width", 10)
-      .attr("height", 10)
-      .style("fill",colorCodeObj[excType]["ask"])
-      .attr("opacity",0)
+    //   infoType.append("rect")
+    //   .attr("class",`${excType}_ask exc_info`)
+    //   .attr("x", 100)
+    //   .attr("y", 50)
+    //   .attr("width", 10)
+    //   .attr("height", 10)
+    //   .style("fill",colorCodeObj[excType]["ask"])
+    //   .attr("opacity",0)
      
      // if("binance" === excType ){
     }
@@ -599,7 +596,7 @@ return {
     .attr("y", 50)
     .attr("width", 10)
     .attr("height", 10)
-    .style("fill",function(d,i){ console.log("Legend d===>",d); return colorCodeObj[d]["ask"]})
+    .style("fill",function(d,i){ return colorCodeObj[d]["ask"]})
     .style("cursor", "pointer")
     .on("click", function(elemData){
      // console.log(elemData);
@@ -614,6 +611,7 @@ return {
     .append("text")
     .attr("x", function(d, i){ return i *  100 + 15;})
     .attr("y",60)
+    .attr("id", function(d){return d+"_legend"})
     .attr("class", function(d){return d+"_legend"})
     .text(function(d,i){ return exchangesList[i];})
     .style("cursor", "pointer"); 
@@ -632,9 +630,17 @@ return {
     });
 
     function updatingHoverEvent(elemData,refThis){
+
+      for(let cx of exchangesList){
+         d3.selectAll(`#${cx}_mcover`).remove();
+         d3.selectAll(`#${cx}_mover`).remove();
+         if(elemData!=cx){
+          document.getElementById(`${cx}_legend`).classList.remove(`active_exchange`);
+         }
+     }
             
    if(d3.select(refThis).classed("active_exchange")){
-    let checkList = d3.selectAll(".active_exchange");     //_groups
+    let checkList = d3.selectAll(".active_exchange");  
     if(checkList && checkList.hasOwnProperty("_groups") && checkList["_groups"].length){
       for(let el of checkList["_groups"][0]){
         if(el && el.classList){
@@ -642,23 +648,21 @@ return {
         }
       }
     }
-    d3.selectAll(".all_ask").style("opacity", 3)
-    d3.selectAll(".all_bid").style("opacity", 3)
-    updateAllTooltip();
+    d3.selectAll(".all_ask").style("opacity", 3);
+    d3.selectAll(".all_bid").style("opacity", 3);
+
+    //_mcover
+   // updateAllTooltip();
    }else{
-    d3.select(refThis).classed("active_exchange", d3.select(refThis).classed("active_exchange") ? false : true);
-    d3.selectAll(".all_ask").style("opacity", 0.1)
-    d3.selectAll(".all_bid").style("opacity", 0.1)
-    d3.selectAll("."+elemData+"_ask").style("opacity", 3)
-    d3.selectAll("."+elemData+"_bid").style("opacity", 3)
-   }
-
-  
-
-   d3.selectAll(elemData+"_legend").attr("color","#CCC")
-   //exchangesList
-  d3.select("#"+elemData+"_mover").remove();
-  d3.select("#"+elemData+"_mcover").remove();
+      d3.select(refThis).classed("active_exchange", d3.select(refThis).classed("active_exchange") ? false : true);
+      d3.selectAll(".all_ask").style("opacity", 0.1)
+      d3.selectAll(".all_bid").style("opacity", 0.1)
+      d3.selectAll("."+elemData+"_ask").style("opacity", 3);
+      d3.selectAll("."+elemData+"_bid").style("opacity", 3);
+      d3.selectAll(elemData+"_legend").attr("color","#CCC")
+      //exchangesList
+      d3.select("#"+elemData+"_mover").remove();
+      d3.select("#"+elemData+"_mcover").remove();
     
    //for mousemove   
 let focus = svg.append("g")
@@ -671,11 +675,6 @@ focus.append("circle")
 .attr("class", "tooltip-point")
 .attr("r", 5);
 
-
-// focus.append("circle")
-// .attr("id","right_circle")
-// .attr("class", "tooltip-point")
-// .attr("r", 5);
 
 focus.append("text")
 .attr("class", "y1")
@@ -721,24 +720,25 @@ svg.append("rect")
 .on("mousemove", mousemove);
 
 
-let tmpMergeArr = [...mainObj[elemData]["bids"],...mainObj[elemData]["asks"]];
+//tmpMergeArr
+singleToolTipMergeArr = [...mainObj[elemData]["bids"],...mainObj[elemData]["asks"]];
 //event for mousemove
 function mousemove() {
 
  // console.log("Current THis",this);
   //console.log("Inverted Value",x.invert(d3.mouse(this)[0]));
 let x0 = x.invert(d3.mouse(this)[0]),
-i = bisectDate(tmpMergeArr, x0, 1),
-d0 = tmpMergeArr[i - 1],
-d1 = tmpMergeArr[i];
+i = bisectDate(singleToolTipMergeArr, x0, 1),
+d0 = singleToolTipMergeArr[i - 1],
+d1 = singleToolTipMergeArr[i];
 
 let d = typeof d1 !=="undefined" && x0 - d0.value > d1.value - x0 ? d1 : d0;
 
 focus.select("circle.tooltip-point")
 .attr("transform",`translate(${x(d.value)},${y(d.totalvolume)})`);
 
- console.log(x0,d);
- console.log("check it for cordinate");
+ //console.log(x0,d);
+ //console.log("check it for cordinate");
 
 focus.select("text.y1")
 .attr("transform", "translate("+ d3.mouse(this)[0] + "," + y(d.totalvolume) + ")");
@@ -767,17 +767,11 @@ focus.select("text.y1").text(d.totalvolume);
 focus.select("text.x1").text(d.value);
 focus.select("text.x2").text(d.value);
 
+     }
+   }
 }
-//end mousemove
-    //  }
-//end mousemove
-    }
 
    function updateWithZoom(begin,end,type){
-     console.log(type,mainObj);
-
-
-     //mainObj[];
 
     let minValue =  d3.min([...mainObj[type]["bids"],...mainObj[type]["asks"]], d => d.value)
     let maxValue =  d3.max([...mainObj[type]["bids"],...mainObj[type]["asks"]], d => d.value)
@@ -832,24 +826,13 @@ focus.select("text.x2").text(d.value);
    }
 
 
-  const updateTipWithLatestData = () =>{
-
-    d3.select('#tooltip')
-   }
-
-
-
    // regarding tooltip
 const updateAllTooltip = ()=>{
-
-
 //d3.selectAll(".react_tooltip").remove();
 //d3.selectAll(".line_tooltip").remove();
 
-
-
-const tooltip = d3.select('#tooltip');
-const tooltipLine = svg.append('line');
+tooltip = d3.select('#tooltip');
+ tooltipLine = svg.append('line');
 
 var tipBox = svg.append('rect')
 .attr("class","react_tooltip")
@@ -891,14 +874,15 @@ tooltipLine.attr('stroke', 'black')
 //         return "green";
 //       })
 
-tooltip.html(xPrice)
-
+tooltip.html(`${xPrice.toFixed(2)}`)
 .style('left', d3.event.pageX + 20+"px")
 .style('top', d3.event.pageY - 20+"px")
 .style('display', 'block')
 .selectAll()
 .data(liveData).enter()
 .append('div')
+.attr("class","fullexc_tooltip")
+.append("span")
 .style('color', d => getExcColor(x0,d)   )
 .html( d => { return  d.exchange + ': ' + getExcInfo(x0,d,xPrice)}  );
 }
@@ -910,28 +894,21 @@ tooltip.html(xPrice)
       return i >(tmpMergeArr.length/2)+1 ? colorCodeObj[d.exchange]["ask"] : colorCodeObj[d.exchange]["bid"]
     }
 
-
    function getExcInfo(cX0,d,pricePoint){
         let  tmpMergeArr = [...d.bids,...d.asks];
         let i = bisectDate(tmpMergeArr, cX0, 1),
         d0 = tmpMergeArr[i - 1],
         d1 = tmpMergeArr[i];
         let dUpdate = typeof d1 !=="undefined" && cX0 - d0.value > d1.value - cX0 ? d1 : d0;
-        return `Volume: ${dUpdate.volume.toFixed(2)}  Qu: ${dUpdate.totalvolume.toFixed(2)}`;
+        return `V: ${dUpdate.volume.toFixed(2)}  Q: ${dUpdate.totalvolume.toFixed(2)}`;
    }
 
    }
 
 
   return (
-
-    
       <React.Fragment>
-
-        {
-          console.log("redde dasds sdf d")
-        }
-        <div>
+     <div>
         <InputRange
       // draggableTrack
         maxValue={maxSliderValue}
@@ -940,7 +917,6 @@ tooltip.html(xPrice)
         step={2}
         onChangeComplete={value => zoomWithSlider(value)} // testMe  zoomWithSlider(value)
         onChange={value => setSilderValue(value) } />
-
 
   <div ref={depthChartRef} className="depthChartExchanges"></div>
     <div id='tooltip' style={{"position":"absolute",
