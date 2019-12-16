@@ -5,6 +5,7 @@ import jsonData from "./data.json";
 //import DepthChartExchanges from './depthChartExchanges';
 
 import DepthChartExchangesNew from './depthChartExchangesNew';
+import StepChart from './stepChart/stepChart';
 //import MultiStackDepthChart from './multipalStack/multiStack';
 //import Test6 from "./test6";
 
@@ -23,7 +24,9 @@ function App() {
          {/* <Test6 /> */}
 
         {/* <MultiStackDepthChart/> */}
-         <DepthChartExchangesNew />
+         {/* <DepthChartExchangesNew /> */}
+
+         <StepChart/>
     </div>
   );
 }
