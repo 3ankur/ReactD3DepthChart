@@ -15,18 +15,7 @@ function App() {
   //const d3Container = useRef(null);
   return (
     <div className="App">
-
-{/* <DepthChart/> */}
-{/* <DepthChartExchanges /> */}
-    
-         {/* <D3Component  id="depthChart" jsonData={jsonData} /> */}
-        
-         {/* <Test6 /> */}
-
-        {/* <MultiStackDepthChart/> */}
-         {/* <DepthChartExchangesNew /> */}
-
-         <StepChart/>
+         <DepthChartExchangesNew />
     </div>
   );
 }

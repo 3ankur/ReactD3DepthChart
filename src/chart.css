@@ -58,3 +58,7 @@ svg text {
   .fullexc_tooltip{
     padding: 5px;
   }
+
+  .line_tooltip circle {
+    fill: steelblue;
+}
