@@ -61,3 +61,13 @@ svg, html, body {
 #slider-range{
   width: 80%px; margin-left:10%; margin-right:10%
 }
+
+.grid line {
+  stroke: rgb(228, 225, 225);
+  stroke-opacity: 0.5;
+  shape-rendering: crispEdges;
+}
+
+.grid path {
+  stroke-width: 0;
+}

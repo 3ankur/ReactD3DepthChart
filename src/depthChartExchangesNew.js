@@ -1,7 +1,7 @@
 import React, { useEffect, useRef,useState,useContext } from "react";
 //import ReactDOM from "react-dom";
 import * as d3 from "d3";
-import liveData from "./newDataSet.json";
+//import liveData from "./newDataSet.json";
 import "./chart.css";
 import InputRange from 'react-input-range';
 import "react-input-range/lib/css/index.css";
@@ -16,13 +16,14 @@ let height= 400;
 let  bisectDate ;
 let colorCodeObj;
 let tooltip,tooltipLine,singleToolTipMergeArr,tooltipCircle ; 
+let liveData;
 
 const DepthChartExchanges = props => {
  
-  const updateChart = ()=>{
+  const updateChart = (updateLiveChartData)=>{
 
 
-          const refDataSet = [...liveData];
+          const refDataSet = [...updateLiveChartData];
           mainMergedData = [];
           exchangesList=[];
           for(let e of refDataSet){
@@ -130,6 +131,7 @@ const genrateRandomData = ()=>{
   const [minSliderValue,setMinValue] = useState(0);
   const [maxSliderValue,setMaxValue] = useState(100);
   const [depthChartData,setDepthChartData]  =  useState([]);
+  const [isLoaded,setLoadingStatus] = useState(false)
 
 const getNearest = (exc,v)=>{
 
@@ -276,32 +278,59 @@ const getNearest = (exc,v)=>{
 
  
   let exCounter = 1;
-  useEffect(
-    () => {
-    console.log("its efect calling");
+  useEffect((props) => {
+    console.log("its efect calling",props);
+    
     getServerData();
     // drawChart();
    },
-    []
+   [isLoaded]
   );
 
   const getServerData = ()=>{
+
   window.fetch("http://localhost:8001/user/stock")
   .then((resp) => resp.json()) 
   .then(function(res) {
       console.log(res,"its final response");
       setDepthChartData(res);
+      liveData = res;
       console.log(depthChartData);
-      setTimeout(()=>{ drawChart();},500)     
+     // setTimeout(()=>{ drawChart();},500)   
+     drawChart(res);  
     }).catch(e=>console.log(e))
   }
 
-   const drawChart =() =>{
 
-    // setInterval(()=>{
-    //   genrateRandomData();
-    //  updateChart();
-    // },5000);
+  const updateChartWithRes = ()=>{
+
+      setInterval(()=>{
+      //genrateRandomData();
+
+      window.fetch("http://localhost:8001/user/stock")
+      .then((resp) => resp.json()) 
+      .then(function(res) {
+      console.log(res,"its final response");
+      setDepthChartData(res);
+      liveData = res;
+      console.log(depthChartData,"all about test");
+     // setTimeout(()=>{ drawChart();},500)   
+    // drawChart(res);  
+
+    updateChart(res);
+
+    }).catch(e=>console.log(e))
+
+
+
+   
+    },5000);
+
+  }
+
+   const drawChart =(liveChartData) =>{
+
+    updateChartWithRes();
 
     console.log(depthChartRef);
      colorCodeObj = {
@@ -322,7 +351,7 @@ const getNearest = (exc,v)=>{
     console.log("BHai ji ye char tdata haiiu",depthChartData);
 
   //chartData   [...liveData]
-    for(let e of [...liveData]){
+    for(let e of [...liveChartData]){
 
         mainObj[e.exchange] = {};
         mainObj[e.exchange]["bids"] =  processData(e["bids"], "bids", true);
@@ -364,7 +393,7 @@ const getNearest = (exc,v)=>{
     //(width + 20) / (height + 2) * 10
    .ticks(20)
    .tickSize(5)
-   .tickPadding(1);
+  // .tickPadding(1);
 
 
     yAxis1 = d3.axisLeft(y1)
@@ -415,6 +444,29 @@ const getNearest = (exc,v)=>{
         .attr("y", "0")
         .attr("width", width)
         .attr("height", height);
+
+
+          // add the X gridlines
+  svg.append("g")			
+  .attr("class", "grid")
+  .attr("opacity","0.1")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x)
+  .ticks(10)
+      .tickSize(-height)
+      .tickFormat("")
+  )
+
+// add the Y gridlines
+svg.append("g")			
+  .attr("class", "grid")
+  .attr("opacity","0.1")
+  .call(d3.axisLeft(y)
+  .ticks(10)
+      .tickSize(-width)
+      .tickFormat("")
+  )
+
 
     //appening by category
     for(let excType in mainObj){
