@@ -17,12 +17,13 @@ let  bisectDate ;
 let colorCodeObj;
 let tooltip,tooltipLine,singleToolTipMergeArr,tooltipCircle ; 
 let liveData;
+let activeExchange = null;
 
 const DepthChartExchanges = props => {
  
   const updateChart = (updateLiveChartData)=>{
 
-
+    console.log(activeExchange,"iii--->it");
           const refDataSet = [...updateLiveChartData];
           mainMergedData = [];
           exchangesList=[];
@@ -42,7 +43,8 @@ const DepthChartExchanges = props => {
 
           let minV = Math.round(d3.min(mainMergedData, d => d.value));
           let maxV = Math.round(d3.max(mainMergedData, d => d.value));
-
+          
+         // console.log(exchangeMinMax,minV,maxV,"Observation===");
 
           y.domain([0, d3.max(mainMergedData, d => d.totalvolume)]);
           y1.domain([0, d3.max(mainMergedData, d => d.totalvolume)]);
@@ -52,7 +54,13 @@ const DepthChartExchanges = props => {
           setMinValue(minV);
           setMaxValue(maxV);
 
-          x.domain([minV-1, maxV+1]);
+            if(activeExchange){
+              x.domain([exchangeMinMax[activeExchange]["min"], exchangeMinMax[activeExchange]["max"]]);
+            }else{
+              x.domain([minV, maxV]);
+            }
+
+          //x.domain([minV, maxV]);
           svg.select(".axis--x").call(xAxis);
           svg.select(".axis-right-y").call(yAxis);//yAxis1
           svg.select(".axis--y").call(yAxis1);
@@ -131,7 +139,6 @@ const genrateRandomData = ()=>{
   const [minSliderValue,setMinValue] = useState(0);
   const [maxSliderValue,setMaxValue] = useState(100);
   const [depthChartData,setDepthChartData]  =  useState([]);
-  const [isLoaded,setLoadingStatus] = useState(false)
 
 const getNearest = (exc,v)=>{
 
@@ -284,7 +291,7 @@ const getNearest = (exc,v)=>{
     getServerData();
     // drawChart();
    },
-   [isLoaded]
+   []
   );
 
   const getServerData = ()=>{
@@ -292,7 +299,7 @@ const getNearest = (exc,v)=>{
   window.fetch("http://localhost:8001/user/stock")
   .then((resp) => resp.json()) 
   .then(function(res) {
-      console.log(res,"its final response");
+      //console.log(res,"its final response");
       setDepthChartData(res);
       liveData = res;
       console.log(depthChartData);
@@ -310,10 +317,10 @@ const getNearest = (exc,v)=>{
       window.fetch("http://localhost:8001/user/stock")
       .then((resp) => resp.json()) 
       .then(function(res) {
-      console.log(res,"its final response");
+     // console.log(res,"its final response");
       setDepthChartData(res);
       liveData = res;
-      console.log(depthChartData,"all about test");
+   //   console.log(depthChartData,"all about test");
      // setTimeout(()=>{ drawChart();},500)   
     // drawChart(res);  
 
@@ -606,12 +613,13 @@ svg.append("g")
     .style("cursor", "pointer"); 
     
     texts.on("click", function(elemData){
-       updatingHoverEvent(elemData,this);
+        updatingHoverEvent(elemData,this);
         updateWithZoom(null,null,elemData)
     });
 
     function updatingHoverEvent(elemData,refThis){
 
+      
       for(let cx of exchangesList){
          d3.selectAll(`#${cx}_mcover`).remove();
          d3.selectAll(`#${cx}_mover`).remove();
@@ -619,19 +627,23 @@ svg.append("g")
           document.getElementById(`${cx}_legend`).classList.remove(`active_exchange`);
          }
      }
+
+     
             
    if(d3.select(refThis).classed("active_exchange")){
     let checkList = d3.selectAll(".active_exchange");  
     if(checkList && checkList.hasOwnProperty("_groups") && checkList["_groups"].length){
       for(let el of checkList["_groups"][0]){
         if(el && el.classList){
-          el.classList.remove("active_exchange")
+          el.classList.remove("active_exchange");
         }
       }
     }
     d3.selectAll(".all_ask").style("opacity", 3);
     d3.selectAll(".all_bid").style("opacity", 3);
+    activeExchange  = null;
    }else{
+      activeExchange = elemData;
       d3.select(refThis).classed("active_exchange", d3.select(refThis).classed("active_exchange") ? false : true);
       d3.selectAll(".all_ask").style("opacity", 0.1)
       d3.selectAll(".all_bid").style("opacity", 0.1)
@@ -743,6 +755,7 @@ function mousemove() {
 
    function updateWithZoom(begin,end,type){
 
+   
     let minValue =  d3.min([...mainObj[type]["bids"],...mainObj[type]["asks"]], d => d.value)
     let maxValue =  d3.max([...mainObj[type]["bids"],...mainObj[type]["asks"]], d => d.value)
 
@@ -793,9 +806,7 @@ function mousemove() {
 
    // regarding tooltip
 const updateAllTooltip = ()=>{
-//d3.selectAll(".react_tooltip").remove();
-//d3.selectAll(".line_tooltip").remove();
-
+  
 tooltip = d3.select('#tooltip');
 tooltipLine = svg.append('line');
 tooltipCircle = svg.append("circle")
